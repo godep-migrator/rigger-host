@@ -3,6 +3,8 @@ rigger-host
 
 Rigger CI host service
 
+[![GoDoc](https://godoc.org/github.com/rigger-dot-io/rigger-host?status.svg)](https://godoc.org/github.com/rigger-dot-io/rigger-host)
+
 ## Development ##
 
 To get started install [godeps](https://github.com/tools/godep) first.
@@ -31,7 +33,7 @@ Or if you'd like to see a coverage report:
 $ make cov
 ```
 
-*Note: coverage report requires [gocov](https://github.com/axw/gocov) and [gocov-html](https://github.com/matm/gocov-html).
+*Note: coverage report requires [gocov](https://github.com/axw/gocov) and [gocov-html](https://github.com/matm/gocov-html).*
 
 ## Status ##
 
