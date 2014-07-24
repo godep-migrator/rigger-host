@@ -3,6 +3,36 @@ rigger-host
 
 Rigger CI host service
 
+## Development ##
+
+To get started install [godeps](https://github.com/tools/godep) first.
+
+### Compiling ###
+
+To compile the rigger binary just call:
+
+```
+$ make all
+```
+
+It will create a `bin` folder in the project root and it will also put a copy into your `GOPATH/bin` for convenience.
+
+### Testing ###
+
+You've got two options to run the test suite:
+
+```
+$ make test
+```
+
+Or if you'd like to see a coverage report:
+
+```
+$ make cov
+```
+
+*Note: coverage report requires [gocov](https://github.com/axw/gocov) and [gocov-html](https://github.com/matm/gocov-html).
+
 ## Status ##
 
 **Rigger is in active development and currently unsuitable for production use.**
