@@ -20,7 +20,7 @@ type Server struct {
 }
 
 // Starts a master server using a given Configuration object
-func (s *Server) Start(config *Config) {
+func (s *Server) Start(config *Config, socketConn *SocketConnection) {
 	// Capture Signals
 	signalChannel := make(chan os.Signal, 1)
 	// Listen to terminate signals
@@ -45,7 +45,7 @@ func (s *Server) Start(config *Config) {
 	}
 
 	// Start listening to socket connections
-	s.socketConn = new(SocketConnection)
+	s.socketConn = socketConn
 	if err := s.socketConn.StartSocketConnection(config.SocketFile); err != nil {
 		log.Println("Could not start socket listener: %s", err)
 		s.Stop()

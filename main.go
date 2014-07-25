@@ -14,8 +14,9 @@ import (
 )
 
 var (
-	server *Server
-	config *Config
+	server     *Server
+	config     *Config
+	socketConn *SocketConnection
 )
 
 func main() {
@@ -36,8 +37,9 @@ func main() {
 
 	// Boot server
 	config = readConfig()
+	socketConn = new(SocketConnection)
 	server = new(Server)
-	server.Start(config)
+	server.Start(config, socketConn)
 }
 
 // readConfig reads in any options passed through the command-line and merges
