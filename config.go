@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"log"
 	"os"
 
 	"github.com/imdario/mergo"
@@ -35,66 +34,63 @@ type Config struct {
 	SocketFile string `mapstructure:"socket_file"`
 }
 
-// Return a configuration object with default values.
-func DefaultConfig() *Config {
+// Load default values into Configuration object.
+func (config *Config) LoadDefaultConfig() error {
 	hostname, err := os.Hostname()
 	if err != nil {
-		log.Fatalf("Error determining hostname: %s", err)
+		return fmt.Errorf("Error determining hostname: %s", err)
 	}
 	// Default config options
-	return &Config{
-		NodeName: hostname,
-	}
+	config.NodeName = hostname
+	return nil
 }
 
-// Merges two configuration objects. Values in C2 will overwrite values in C1.
-func MergeConfig(c1, c2 *Config) *Config {
-	var result Config = *c1
-
-	if err := mergo.Merge(&result, c2); err != nil {
-		log.Fatalf("Error merging Configuration objects: %s", err)
+// Merges configuration objects.
+func (config *Config) MergeWith(c *Config) error {
+	if err := mergo.Merge(config, c); err != nil {
+		return fmt.Errorf("Error merging Configuration objects: %s", err)
 	}
 
-	return &result
+	return nil
 }
 
 // Reads the configuration file found at the given path. Only files are
 // accepted, directories will be rejected and an error will be thrown. If the
 // file exists, it will be passed to the DecodeConfig method for processing.
-func ReadConfigPath(path string) (*Config, error) {
-	result := new(Config)
-
+func (config *Config) LoadConfigFromPath(path string) error {
 	// Try opening config file at path
 	f, err := os.Open(path)
 	if err != nil {
-		return nil, fmt.Errorf("Error reading '%s': %s", path, err)
+		return fmt.Errorf("Error reading '%s': %s", path, err)
 	}
 
 	// Try reading config file
 	fi, err := f.Stat()
 	if err != nil {
 		f.Close()
-		return nil, fmt.Errorf("Error reading '%s': %s", path, err)
+		return fmt.Errorf("Error reading '%s': %s", path, err)
 	}
 
 	// We are expecting a config file, reject directories
 	if fi.IsDir() {
-		return nil, fmt.Errorf("'%s' is a directory, expected a file", path)
+		return fmt.Errorf("'%s' is a directory, expected a file", path)
 	}
 
-	config, err := DecodeConfig(f)
+	configFromFile, err := decodeConfig(f)
 	f.Close()
+
 	if err != nil {
-		return nil, fmt.Errorf("Error parsing config file at '%s': %s", path, err)
+		return fmt.Errorf("Could not decode configuration file: %s", err)
 	}
 
-	result = MergeConfig(result, config)
-	return result, nil
+	config.MergeWith(configFromFile)
+
+	return nil
 }
 
 // Parses the config file. Content of the file must be valid JSON, an error will
 // be thrown otherwise.
-func DecodeConfig(r io.Reader) (*Config, error) {
+func decodeConfig(r io.Reader) (*Config, error) {
 	var raw interface{}
 	var result Config
 

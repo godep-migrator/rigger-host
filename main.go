@@ -54,10 +54,9 @@ func readConfig() *Config {
 		fmt.Printf("Rigger Host v%s%s, build %s", Version, VersionPrerelease, GitCommit)
 	}
 
-	// Load "bootstrap" config
-	config := DefaultConfig()
-	// Merge defaults with custom arguments
-	config = MergeConfig(config, &cmdConfig)
+	var config = new(Config)
+	config.LoadDefaultConfig()
+	config.MergeWith(&cmdConfig)
 
 	return config
 }

@@ -7,14 +7,15 @@ import (
 	"testing"
 )
 
-func TestDefaultConfig(t *testing.T) {
-	config := DefaultConfig()
+func TestLoadDefaultConfig(t *testing.T) {
+	config := new(Config)
+	config.LoadDefaultConfig()
 	if config.NodeName == "" {
 		t.Fatalf("should never be empty")
 	}
 }
 
-func TestMergeConfig(t *testing.T) {
+func TestMergeWith(t *testing.T) {
 	c1 := &Config{
 		NodeName:   "rigger.dev",
 		Daemon:     false,
@@ -33,27 +34,29 @@ func TestMergeConfig(t *testing.T) {
 		SocketFile: "/var/run/test.sock",
 	}
 
-	c := MergeConfig(c1, c2)
+	c1.MergeWith(c2)
 
-	if !reflect.DeepEqual(c, c2) {
-		t.Fatalf("should be equal %v %v", c, c2)
+	if !reflect.DeepEqual(c1, c2) {
+		t.Fatalf("should be equal %v %v", c1, c2)
 	}
 }
 
-func TestReadConfigPath_badPath(t *testing.T) {
-	_, err := ReadConfigPath("/does/not/exist.json")
+func TestLoadConfigFromPath_badPath(t *testing.T) {
+	c := new(Config)
+	err := c.LoadConfigFromPath("/does/not/exist.json")
 	if err == nil {
 		t.Fatalf("should have thrown an error")
 	}
 }
 
-func TestReadConfigPath_folderPath(t *testing.T) {
+func TestLoadConfigFromPath_folderPath(t *testing.T) {
 	td, err := ioutil.TempDir("", "rigger")
 	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
 
-	_, err = ReadConfigPath(td)
+	c := new(Config)
+	err = c.LoadConfigFromPath(td)
 	if err == nil {
 		t.Fatalf("should have thrown an error")
 	}
@@ -61,7 +64,7 @@ func TestReadConfigPath_folderPath(t *testing.T) {
 	defer os.RemoveAll(td)
 }
 
-func TestReadConfigPath_correctPath(t *testing.T) {
+func TestLoadConfigFromPath_correctPath(t *testing.T) {
 	tf, err := ioutil.TempFile("", "rigger.json")
 	if err != nil {
 		t.Fatalf("err: %s", err)
@@ -69,17 +72,18 @@ func TestReadConfigPath_correctPath(t *testing.T) {
 	tf.Write([]byte(`{"node_name":"foo", "daemon":true}`))
 	tf.Close()
 
-	config, err := ReadConfigPath(tf.Name())
-	if (err != nil) || (config == nil) {
+	c := new(Config)
+	err = c.LoadConfigFromPath(tf.Name())
+	if err != nil {
 		t.Fatalf("err: %s", err)
 	}
 
-	if config.NodeName != "foo" {
-		t.Fatalf("should be equal %s foo", config.NodeName)
+	if c.NodeName != "foo" {
+		t.Fatalf("should be equal %s foo", c.NodeName)
 	}
 
-	if config.Daemon != true {
-		t.Fatalf("should be equal %s true", config.Daemon)
+	if c.Daemon != true {
+		t.Fatalf("should be equal %s true", c.Daemon)
 	}
 
 	defer os.Remove(tf.Name())
