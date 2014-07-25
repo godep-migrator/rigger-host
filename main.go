@@ -51,12 +51,29 @@ func readConfig() *Config {
 
 	// Handle version flag separate from others
 	if *version {
-		fmt.Printf("Rigger Host v%s%s, build %s", Version, VersionPrerelease, GitCommit)
+		fmt.Printf("Rigger Host v%s%s, build %v\n", Version, VersionPrerelease, GitCommit)
+		os.Exit(0)
 	}
 
+	// New empty configuration object
 	var config = new(Config)
-	config.LoadDefaultConfig()
-	config.MergeWith(&cmdConfig)
+
+	// Load defaults
+	if err := config.LoadDefaultConfig(); err != nil {
+		log.Fatalf("Could not load default config: %s", err)
+	}
+
+	// Overwrite defaults with options from command-line
+	if err := config.MergeWith(&cmdConfig); err != nil {
+		log.Fatalf("Could not load config: %s", err)
+	}
+
+	// Load config file
+	if err := config.LoadConfigFromPath(config.ConfigFile); err != nil {
+		log.Fatalf("Could not load config: %s", err)
+	}
+
+	log.Printf("Node name: %v\n", config.NodeName)
 
 	return config
 }

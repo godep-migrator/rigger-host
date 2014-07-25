@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"os"
 
 	"github.com/imdario/mergo"
@@ -84,6 +85,8 @@ func (config *Config) LoadConfigFromPath(path string) error {
 	}
 
 	config.MergeWith(configFromFile)
+
+	log.Printf("Loaded configuration from: %s", path)
 
 	return nil
 }
