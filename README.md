@@ -5,19 +5,40 @@ Rigger CI host service
 
 [![GoDoc](https://godoc.org/github.com/rigger-dot-io/rigger-host?status.svg)](https://godoc.org/github.com/rigger-dot-io/rigger-host)
 
+## Usage ##
+
+To start a rigger host run:
+
+```
+$ sudo rigger [options]
+```
+
+To see all available options:
+
+```
+$ sudo rigger -h
+Usage of rigger:
+  -c, --config="/etc/rigger.conf"        Load configuration from file
+  -d, --daemon=false                     Enable daemon mode
+  -l, --logfile="/var/log/rigger.log"    Path to rigger log file
+  -p, --pidfile="/var/run/rigger.pid"    Path to use for PID file
+  -s, --socket="/var/run/rigger.sock"    Use this file as the rigger socket
+  -v, --version=false                    Print version information and quit
+```
+
 ## Development ##
 
 To get started install [godeps](https://github.com/tools/godep) first.
 
-### Compiling ###
+### Building ###
 
-To compile the rigger binary just call:
+To compile rigger just call:
 
 ```
 $ make all
 ```
 
-It will create a `bin` folder in the project root and it will also put a copy into your `GOPATH/bin` for convenience.
+It will create a `bin` folder in the project root and will also put a copy into your `GOPATH/bin` for convenience.
 
 ### Testing ###
 
