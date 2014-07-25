@@ -13,23 +13,36 @@ import (
 	flag "github.com/dotcloud/docker/pkg/mflag"
 )
 
+var (
+	server *Server
+	config *Config
+)
+
 func main() {
 	// Halt process if host OS is not *nix type
 	if runtime.GOOS == "windows" {
-		log.Fatalf("Rigger daemon is only supported on *nix platforms")
+		log.Fatalf("Rigger is only supported on *nix platforms")
 	}
 
 	// Check security level
 	if os.Geteuid() != 0 {
-		log.Fatalf("Rigger daemon needs to be run as root")
+		log.Fatalf("Rigger needs to be run as root")
+	}
+
+	// Check GOMAXPROCS
+	if runtime.GOMAXPROCS(0) == 1 {
+		log.Printf("WARNING: It is highly recommended to set GOMAXPROCS higher than 1")
 	}
 
 	// Boot server
-	config := readConfig()
-	server := new(Server)
+	config = readConfig()
+	server = new(Server)
 	server.Start(config)
 }
 
+// readConfig reads in any options passed through the command-line and merges
+// these options with the base Configuration object. The order of importance
+// is: CLI > Config file > Defaults
 func readConfig() *Config {
 
 	var cmdConfig Config
@@ -72,8 +85,6 @@ func readConfig() *Config {
 	if err := config.LoadConfigFromPath(config.ConfigFile); err != nil {
 		log.Fatalf("Could not load config: %s", err)
 	}
-
-	log.Printf("Node name: %v\n", config.NodeName)
 
 	return config
 }
