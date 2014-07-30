@@ -14,24 +14,10 @@ import (
 type Server struct {
 	// Configuration object
 	config *Config
-
-	// Unix Socket connection
-	socketConn *SocketConnection
 }
 
 // Starts a master server using a given Configuration object
-func (s *Server) Start(config *Config, socketConn *SocketConnection) {
-	// Capture Signals
-	signalChannel := make(chan os.Signal, 1)
-	// Listen to terminate signals
-	signal.Notify(signalChannel, os.Interrupt, os.Kill, syscall.SIGTERM)
-	// Stop server when received a terminate signal
-	go func(c chan os.Signal) {
-		sig := <-c
-		log.Printf("Captured %v, stopping server and exiting...", sig)
-		s.Stop()
-	}(signalChannel)
-
+func (s *Server) Start(config *Config) {
 	// Set server config
 	s.config = config
 
@@ -44,12 +30,9 @@ func (s *Server) Start(config *Config, socketConn *SocketConnection) {
 		}
 	}
 
-	// Start listening to socket connections
-	s.socketConn = socketConn
-	if err := s.socketConn.StartSocketConnection(config.SocketFile); err != nil {
-		log.Println("Could not start socket listener: %s", err)
-		s.Stop()
-	}
+	s.initInterruptListener()
+
+	RPCListen(config.Port)
 }
 
 // Stops the server
@@ -60,12 +43,19 @@ func (s *Server) Stop() {
 		utils.RemovePidFile(s.config.PidFile)
 	}
 
-	// Close all socket connections before exiting so the socket file can be
-	// removed
-	log.Println("Closing connections...")
-	if err := s.socketConn.StopSocketConnection(); err != nil {
-		log.Fatalf("Could not close socket connection: %s", err)
-	}
-
 	os.Exit(0)
+}
+
+// Init hook to catch terminate signals
+func (s *Server) initInterruptListener() {
+	// Capture Signals
+	signalChannel := make(chan os.Signal, 1)
+	// Listen to terminate signals
+	signal.Notify(signalChannel, os.Interrupt, os.Kill, syscall.SIGTERM)
+	// Stop server when received a terminate signal
+	go func(c chan os.Signal) {
+		sig := <-c
+		log.Printf("Captured %v, stopping server and exiting...", sig)
+		s.Stop()
+	}(signalChannel)
 }

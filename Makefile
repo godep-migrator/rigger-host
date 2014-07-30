@@ -8,6 +8,10 @@ cov:
 update_deps:
 	godep save -copy=false
 
+deps:
+	@echo "--> Installing dependencies"
+	@go get ./...
+
 all:
 	@mkdir -p bin/
 	@bash --norc -i ./build.sh

@@ -15,9 +15,8 @@ import (
 )
 
 var (
-	server     *host.Server
-	config     *host.Config
-	socketConn *host.SocketConnection
+	server *host.Server
+	config *host.Config
 )
 
 func main() {
@@ -38,9 +37,8 @@ func main() {
 
 	// Boot server
 	config = readConfig()
-	socketConn = new(host.SocketConnection)
 	server = new(host.Server)
-	server.Start(config, socketConn)
+	server.Start(config)
 }
 
 // readConfig reads in any options passed through the command-line and merges
@@ -54,14 +52,13 @@ func readConfig() *host.Config {
 		false, "Print version information and quit")
 	flag.BoolVar(&cmdConfig.Daemon, []string{"d", "-daemon"},
 		false, "Enable daemon mode")
-	flag.StringVar(&cmdConfig.PidFile, []string{"p", "-pidfile"},
+	flag.StringVar(&cmdConfig.PidFile, []string{"-pidfile"},
 		"/var/run/rigger.pid", "Path to use for PID file")
-	flag.StringVar(&cmdConfig.SocketFile, []string{"s", "-socket"},
-		"/var/run/rigger.sock", "Use this file as the rigger socket")
 	flag.StringVar(&cmdConfig.ConfigFile, []string{"c", "-config"},
 		"/etc/rigger.conf", "Load configuration from file")
 	flag.StringVar(&cmdConfig.LogFile, []string{"l", "-logfile"},
 		"/var/log/rigger.log", "Path to rigger log file")
+	flag.IntVar(&cmdConfig.Port, []string{"p", "-port"}, 9876, "RPC Port")
 
 	flag.Parse()
 

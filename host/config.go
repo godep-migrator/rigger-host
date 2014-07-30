@@ -30,9 +30,8 @@ type Config struct {
 	// Pidfile location for daemonized server
 	PidFile string `mapstructure:"pid_file"`
 
-	// Unix socket file. Any third-party application (including rigger's own API)
-	// should use this socket for communication with the master server.
-	SocketFile string `mapstructure:"socket_file"`
+	// Port number for RPC Listener
+	Port int `mapstructure:"port"`
 }
 
 // Load default values into Configuration object.

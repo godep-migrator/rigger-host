@@ -22,7 +22,6 @@ func TestMergeWith(t *testing.T) {
 		ConfigFile: "/etc/rigger.conf",
 		LogFile:    "/var/log/rigger.log",
 		PidFile:    "/var/run/rigger.pid",
-		SocketFile: "/var/run/rigger.sock",
 	}
 
 	c2 := &Config{
@@ -31,7 +30,6 @@ func TestMergeWith(t *testing.T) {
 		ConfigFile: "/etc/test.conf",
 		LogFile:    "/var/log/test.log",
 		PidFile:    "/var/run/test.pid",
-		SocketFile: "/var/run/test.sock",
 	}
 
 	c1.MergeWith(c2)
