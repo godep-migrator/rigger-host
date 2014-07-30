@@ -7,7 +7,7 @@ Rigger CI host service
 
 ## Overview ##
 
-![Overview](https://raw.githubusercontent.com/rigger-dot-io/rigger-host/master/diagrams/rigger-host.svg)
+![Overview](https://raw.githubusercontent.com/rigger-dot-io/rigger-host/master/diagrams/rigger-host.png)
 
 ## Usage ##
 
