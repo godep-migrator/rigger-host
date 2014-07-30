@@ -1,4 +1,4 @@
-package main
+package host
 
 import (
 	"fmt"
@@ -22,6 +22,7 @@ func (s *SocketConnection) StartSocketConnection(socketFile string) error {
 	s.listener = listener
 	log.Printf("Node listening for incoming connections on: %s\n", socketFile)
 
+	// Main loop
 	for {
 		conn, err := s.listener.Accept()
 		if err != nil {
@@ -45,7 +46,7 @@ func (s *SocketConnection) StopSocketConnection() error {
 func handleClient(c net.Conn) error {
 	// Close connections after it's been used
 	defer c.Close()
-	// Main loop
+
 	for {
 		buf := make([]byte, 512)
 		nr, err := c.Read(buf)

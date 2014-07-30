@@ -11,12 +11,13 @@ import (
 	"runtime"
 
 	flag "github.com/dotcloud/docker/pkg/mflag"
+	host "github.com/rigger-dot-io/rigger-host/host"
 )
 
 var (
-	server     *Server
-	config     *Config
-	socketConn *SocketConnection
+	server     *host.Server
+	config     *host.Config
+	socketConn *host.SocketConnection
 )
 
 func main() {
@@ -37,17 +38,17 @@ func main() {
 
 	// Boot server
 	config = readConfig()
-	socketConn = new(SocketConnection)
-	server = new(Server)
+	socketConn = new(host.SocketConnection)
+	server = new(host.Server)
 	server.Start(config, socketConn)
 }
 
 // readConfig reads in any options passed through the command-line and merges
 // these options with the base Configuration object. The order of importance
 // is: CLI > Config file > Defaults
-func readConfig() *Config {
+func readConfig() *host.Config {
 
-	var cmdConfig Config
+	var cmdConfig host.Config
 
 	var version = flag.Bool([]string{"v", "-version"},
 		false, "Print version information and quit")
@@ -71,7 +72,7 @@ func readConfig() *Config {
 	}
 
 	// New empty configuration object
-	var config = new(Config)
+	var config = new(host.Config)
 
 	// Load defaults
 	if err := config.LoadDefaultConfig(); err != nil {

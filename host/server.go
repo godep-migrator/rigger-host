@@ -1,4 +1,4 @@
-package main
+package host
 
 import (
 	"fmt"
@@ -29,7 +29,7 @@ func (s *Server) Start(config *Config, socketConn *SocketConnection) {
 	go func(c chan os.Signal) {
 		sig := <-c
 		log.Printf("Captured %v, stopping server and exiting...", sig)
-		server.Stop()
+		s.Stop()
 	}(signalChannel)
 
 	// Set server config
