@@ -5,10 +5,6 @@ Rigger CI host service
 
 [![GoDoc](https://godoc.org/github.com/rigger-dot-io/rigger-host?status.svg)](https://godoc.org/github.com/rigger-dot-io/rigger-host)
 
-## Overview ##
-
-![Overview](https://raw.githubusercontent.com/rigger-dot-io/rigger-host/master/diagrams/rigger-host.png)
-
 ## Usage ##
 
 To start a rigger host run:
