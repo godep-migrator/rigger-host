@@ -25,8 +25,8 @@ Usage of rigger:
   -c, --config="/etc/rigger.conf"        Load configuration from file
   -d, --daemon=false                     Enable daemon mode
   -l, --logfile="/var/log/rigger.log"    Path to rigger log file
-  -p, --pidfile="/var/run/rigger.pid"    Path to use for PID file
-  -s, --socket="/var/run/rigger.sock"    Use this file as the rigger socket
+  -p, --port=9876                        RPC Port
+  --pidfile="/var/run/rigger.pid"        Path to use for PID file
   -v, --version=false                    Print version information and quit
 ```
 

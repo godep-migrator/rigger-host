@@ -3,9 +3,18 @@
 	"GoVersion": "go1.3",
 	"Deps": [
 		{
+			"ImportPath": "code.google.com/p/go.crypto/ssh",
+			"Comment": "null-213",
+			"Rev": "aa2644fe4aa50e3b38d75187b4799b1f0c9ddcef"
+		},
+		{
 			"ImportPath": "github.com/dotcloud/docker/pkg/mflag",
 			"Comment": "v1.1.1-153-g9216ced",
 			"Rev": "9216ced00310979d8051e516663d5c9b08656f29"
+		},
+		{
+			"ImportPath": "github.com/gorilla/rpc",
+			"Rev": "f50c84620999c65ac5c204e52f1c1a9299548ca6"
 		},
 		{
 			"ImportPath": "github.com/imdario/mergo",
