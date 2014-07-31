@@ -1,4 +1,4 @@
-package host
+package rpc
 
 import (
 	"fmt"
@@ -9,12 +9,13 @@ import (
 	"github.com/gorilla/rpc/json"
 )
 
-func RPCListen(port int) {
+func Listen(port int) {
 	log.Printf("Listening on port %v...", port)
 
 	s := rpc.NewServer()
 
 	s.RegisterCodec(json.NewCodec(), "application/json")
+	s.RegisterService(new(ProjectService), "")
 
 	portString := fmt.Sprintf(":%v", port)
 

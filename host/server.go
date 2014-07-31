@@ -7,6 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
+	rpc "github.com/rigger-dot-io/rigger-host/rpc"
 	utils "github.com/rigger-dot-io/rigger-host/utils"
 )
 
@@ -32,7 +33,7 @@ func (s *Server) Start(config *Config) {
 
 	s.initInterruptListener()
 
-	RPCListen(config.Port)
+	rpc.Listen(config.Port)
 }
 
 // Stops the server

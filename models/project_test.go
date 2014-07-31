@@ -4,6 +4,7 @@ import (
 	"testing"
 )
 
+// @TODO: mock utils
 func TestNewProject_return_valid_project(t *testing.T) {
 	project, err := NewProject("rigger-host", "rigger-dot-io", "github.com", "git", "git://github.com/rigger-dot-io/rigger-host")
 	if err != nil {
